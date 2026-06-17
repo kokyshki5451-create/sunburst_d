@@ -102,8 +102,8 @@ def create_sunburst(conn):
         )
 
         # ----- НОВЫЙ КОД ДЛЯ СОХРАНЕНИЯ HTML -----
-        fig.write_html("sunburst.html")
-        print("Диаграмма сохранена в sunburst.html")
+        fig.write_html("index.html")
+        print("Диаграмма сохранена в index.html")
         # -----------------------------------------
 
        
