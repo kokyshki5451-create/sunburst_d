@@ -17,7 +17,7 @@ def initialize_database():
         # создание если ошибка
         if not existing_tables:
             print("Создаем базу данных...")
-            with open(r'C:\Users\Lenovo\Documents\test1234.sql', 'r', encoding='utf-8') as f:
+            with open('test1234.sql', 'r', encoding='utf-8') as f:
                 sql_script = f.read()
 
             # Выполняем скрипт построчно для лучшего контроля
