@@ -6,20 +6,27 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write    # <-- даём право на коммит и пуш
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install dependencies
         run: pip install pandas plotly
+
       - name: Run script
         run: python test1.py
+
       - name: Commit and push generated HTML
         run: |
           git config user.name "github-actions[bot]"
