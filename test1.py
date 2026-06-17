@@ -68,7 +68,7 @@ def create_sunburst(conn):
             """
             path = ['division', 'pd', 'rd', 'system']
         else:
-            # при ошибке system, используем упрощенную иерархию
+            # упрощённая иерархия, если таблицы system нет
             query = """
             SELECT 
                 d.div_name AS division,
@@ -101,8 +101,12 @@ def create_sunburst(conn):
             textfont=dict(family="Arial, sans-serif")
         )
 
+        # ----- НОВЫЙ КОД ДЛЯ СОХРАНЕНИЯ HTML -----
         fig.write_html("sunburst.html")
-    print("Диаграмма сохранена в sunburst.html")
+        print("Диаграмма сохранена в sunburst.html")
+        # -----------------------------------------
+
+       
 
     except Exception as e:
         print("Ошибка при построении диаграммы:", e)
