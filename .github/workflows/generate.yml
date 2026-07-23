@@ -1,47 +1,46 @@
-name: CI Pipeline
+name: Generate Sunburst HTML
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  test-and-build:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11', '3.12']
-      # Продолжать выполнение других версий, даже если одна упала (помогает видеть все ошибки сразу)
-      fail-fast: false 
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        # Мы убрали cache: 'pip', так как файла requirements.txt пока нет.
-        # Если создадите requirements.txt, верните эту строку:
-        # cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        # Вариант А: Если у вас есть requirements.txt, раскомментируйте строку ниже:
-        # pip install -r requirements.txt
-        
-        # Вариант Б: Установка пакетов напрямую (для вашего скрипта test1.py):
-        pip install pandas plotly
+      - name: Install dependencies
+        run: pip install pandas plotly
 
-    - name: Проверка синтаксиса Python
-      run: |
-        python -m py_compile test1.py
-        echo "✅ Синтаксис test1.py корректен"
+      - name: Run script to generate HTML
+        run: python test1.py
 
-    - name: Отладка (показать файлы в репозитории)
-      run: |
-        echo "Текущая директория: $(pwd)"
-        ls -la
+      - name: Check if index.html was created
+        run: |
+          if [ ! -f index.html ]; then
+            echo "❌ ОШИБКА: Файл index.html не был создан скриптом!"
+            exit 1
+          fi
+          echo "✅ Файл index.html найден."
+
+      - name: Commit and push generated HTML
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "chore: auto-generate sunburst index.html"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
