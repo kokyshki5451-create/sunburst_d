@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import os
 
-# Путь к файлу БД и SQL-скрипту
+# Путь к файлу БД и SQL-скрипту фывфыв
 DB_NAME = 'engineering_hierarchy.db'
 SQL_FILE = r'C:\Users\Lenovo\Documents\test123.db.sql'  # Укажите путь к test123.db.sql
 
